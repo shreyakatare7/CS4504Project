@@ -36,7 +36,7 @@ public class TCPClient {
 
 
       	// Variables for message passing
-         List<int[][]> matrices = readMatricesFromFile("C:\\IntelliJ IDEA Community Edition 2021.2\\src\\CS4504Project\\file.txt");
+         List<int[][]> matrices = readMatricesFromFile("C:\\Users\\katar\\OneDrive\\Documents\\CS4504Project\\file.txt");
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
 			String address ="192.168.1.70"; // destination IP (Server)
