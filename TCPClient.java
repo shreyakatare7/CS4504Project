@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigInteger;
 
 public class TCPClient {
        public static void main(String[] args) throws IOException {
@@ -14,7 +15,7 @@ public class TCPClient {
          BufferedReader in = null; // for reading form ServerRouter
 			InetAddress addr = InetAddress.getLocalHost();
 			String host = addr.getHostAddress(); // Client machine's IP
-           String routerName = "192.168.1.128";
+           String routerName = "192.168.1.110";
 			int SockNum = 5555; // port number
            ArrayList<Long> times = new ArrayList<>();
            long totalTime = 0;
@@ -36,7 +37,7 @@ public class TCPClient {
 
 
       	// Variables for message passing
-         List<int[][]> matrices = readMatricesFromFile("C:\\Users\\katar\\OneDrive\\Documents\\CS4504Project\\file.txt");
+         List<BigInteger[][]> matrices = readMatricesFromFile("C:\\Users\\katar\\OneDrive\\Documents\\CS4504Project\\file.txt");
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
 			String address ="192.168.1.70"; // destination IP (Server)
@@ -48,11 +49,11 @@ public class TCPClient {
 			out.println(host); // Client sends the IP of its machine as initial send
 			t0 = System.currentTimeMillis();
 			// Communication while loop
-           for(int [][] matrix : matrices){
+           for(BigInteger [][] matrix : matrices){
                // convert the matrix to String format for sending
                StringBuilder matrixString = new StringBuilder();
-               for(int[] row : matrix){
-                   for(int value : row){
+               for(BigInteger[] row : matrix){
+                   for(BigInteger value : row){
                        matrixString.append(value).append(" ");
                    }
                    matrixString.append("\n");
@@ -74,37 +75,43 @@ public class TCPClient {
            }
            System.out.println("Total time:" + totalTime + " ms");
 
+           out.println("send metrics");
+           String speedup = in.readLine();
+           String efficiency = in.readLine();
+
+           System.out.println("Speedup: "+ speedup);
+           System.out.println("Efficiency: "+ efficiency);
+
            // closing connections
          out.close();
          in.close();
          s.close();
       }
 
-      public static List<int[][]> readMatricesFromFile(String fileName){
-           List<int[][]> matrices = new ArrayList<>();
-           try (BufferedReader br = new BufferedReader((new FileReader(fileName)))){
-               String line;
-               while((line = br.readLine()) != null){
-                   if(line.startsWith("#")){
-                       // read the matrix size
-                       line = br.readLine();
-                       int size = Integer.parseInt(line.trim());
-                       int [][] matrix = new int[size][size];
+      public static List<BigInteger[][]> readMatricesFromFile(String fileName){
+          List<BigInteger[][]> matrices = new ArrayList<>();
+          try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+              String line;
+              while ((line = br.readLine()) != null) {
+                  if (line.startsWith("#")) {
+                      br.readLine();  // Read and skip the line containing the matrix size
+                      line = br.readLine().trim(); // Read the matrix values as one single line
+                      String[] values = line.split("\\s+"); // Split by whitespace
+                      int size = values.length;
 
-                       //read the matrix values
-                       for(int i = 0; i < size; i++){
-                           line = br.readLine();
-                           String [] values = line.trim().split("");
-                           for(int j = 0; j< size; j++){
-                               matrix[i][j] = Integer.parseInt(values[j]);
-                           }
-                       }
-                       matrices.add(matrix);
-                   }
-               }
-           } catch (IOException e){
-               e.printStackTrace();
-           }
-           return matrices;
+                      BigInteger[][] matrix = new BigInteger[size][size];
+                      for (int i = 0; i < size; i++) {
+                          for (int j = 0; j < size; j++) {
+                              matrix[i][j] = new BigInteger(values[j]);
+                          }
+                      }
+
+                      matrices.add(matrix); // Add the matrix to the list
+                  }
+              }
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+          return matrices;
       }
    }
