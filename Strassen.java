@@ -3,7 +3,7 @@ package CS4504Project;
 public class Strassen {
 
     // Method to multiply two matrices using Strassen's algorithm
-    public int[][] multiply(int[][] A, int[][] B) {
+    public static int[][] multiply(int[][] A, int[][] B) {
         int n = A.length;
         int[][] R = new int[n][n];
         /** base case **/
@@ -71,7 +71,7 @@ public class Strassen {
     }
 
     /** Function to add two matrices **/
-    private int[][] add(int[][] A, int[][] B) {
+    private static int[][] add(int[][] A, int[][] B) {
         int n = A.length;
         int[][] C = new int[n][n];
         for (int i = 0; i < n; i++)
@@ -81,7 +81,7 @@ public class Strassen {
     }
 
     /** Function to sub two matrices **/
-    private int[][] sub(int[][] A, int[][] B) {
+    private static int[][] sub(int[][] A, int[][] B) {
         int n = A.length;
         int[][] C = new int[n][n];
         for (int i = 0; i < n; i++)
@@ -91,14 +91,14 @@ public class Strassen {
     }
 
     /** Function to split parent matrix into child matrices **/
-    private void split(int[][] P, int[][] C, int iB, int jB) {
+    private static void split(int[][] P, int[][] C, int iB, int jB) {
         for(int i1 = 0, i2 = iB; i1 < C.length; i1++, i2++)
             for(int j1 = 0, j2 = jB; j1 < C.length; j1++, j2++)
                 C[i1][j1] = P[i2][j2];
     }
 
     /** Function to join child matrices into parent matrix **/
-    private void join(int[][] C, int[][] P, int iB, int jB) {
+    private static void join(int[][] C, int[][] P, int iB, int jB) {
         for(int i1 = 0, i2 = iB; i1 < C.length; i1++, i2++)
             for(int j1 = 0, j2 = jB; j1 < C.length; j1++, j2++)
                 P[i2][j2] = C[i1][j1];
