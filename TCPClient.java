@@ -8,7 +8,7 @@ import java.math.BigInteger;
 public class TCPClient {
        public static void main(String[] args) throws IOException {
 
-			// Variables for setting up connection and communication
+           // Variables for setting up connection and communication
          Socket s = null; // socket to connect with ServerRouter
          PrintWriter out = null; // for writing to ServerRouter
          BufferedReader in = null; // for reading form ServerRouter
@@ -35,27 +35,33 @@ public class TCPClient {
 
 
       	// Variables for message passing
-         BigInteger[][] matrix = readMatricesFromFile("C:\\Users\\katar\\OneDrive\\Documents\\CS4504Project\\file.txt");
+         BigInteger[][] matrix = readMatricesFromFile("C:\\Users\\katar\\IntelliJ IDEA Community Edition 2024.2.3\\CS4504Project\\matrix1.txt");
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
-			String address ="192.168.1.70"; // destination IP (Server)
+			String address ="192.168.1.110"; // destination IP (Server)
 			long t0, t1 = 0, t;
            ArrayList<Long> times = new ArrayList<>();
 
            // Communication process (initial sends/receives
+           t0 = System.currentTimeMillis();
 			out.println(address);// initial send (IP of the destination Server)
 			fromServer = in.readLine();//initial receive from router (verification of connection)
 			System.out.println("ServerRouter: " + fromServer);
 			out.println(host); // Client sends the IP of its machine as initial send
+            fromServer = in.readLine();
+            t1 = System.currentTimeMillis();
+            System.out.println("Server: "+ fromServer);
+            System.out.println("Handshake cycle time: " + (t1-t0)+" ms");
 
-			// Communication while loop
+           // Communication of matrix
            StringBuilder matrixString = new StringBuilder();
            for (BigInteger[] row : matrix) {
                for (BigInteger value : row) {
                    matrixString.append(value).append(" ");
                }
-               matrixString.append("\n");
+               matrixString.append(";");
            }
+
            t0 = System.currentTimeMillis();
            out.println(matrixString.toString().trim());
            fromServer = in.readLine();

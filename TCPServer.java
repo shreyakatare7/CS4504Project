@@ -14,7 +14,7 @@ public static void main(String[] args) throws IOException {
     BufferedReader in = null; // for reading form ServerRouter
     InetAddress addr = InetAddress.getLocalHost();
     String host = addr.getHostAddress(); // Server machine's IP
-    String routerName = "192.168.1.128";
+    String routerName = "192.168.1.110";
     int SockNum = 5555; // port number
 
     // Tries to connect to the ServerRouter
@@ -39,17 +39,18 @@ public static void main(String[] args) throws IOException {
     int numThreads = 3;
     ExecutorService singleThreadExecutor = Executors.newFixedThreadPool(1);
     ExecutorService multiThreadExecutor = Executors.newFixedThreadPool(numThreads);
-    String address = "192.168.1.128"; // destination IP (Client)
+    String address = "192.168.1.110"; // destination IP (Client)
 
     // Communication process (initial sends/receives)
     out.println(address);// initial send (IP of the destination Client)
     fromClient = in.readLine();// initial receive from router (verification of connection)
     System.out.println("ServerRouter: " + fromClient);
     out.println(host); // Server sends the IP of its machine as initial send
+    fromClient = in.readLine();
 
+    fromClient = in.readLine();
     // Communication while loop
     while (matrices.size() < numMatrices) {
-        fromClient = in.readLine();
         int[][] matrix = parseMatrix(fromClient);
         matrices.add(matrix);
     }
@@ -117,16 +118,17 @@ public static void main(String[] args) throws IOException {
     }
 
     private static int[][] parseMatrix (String matrixData){
-        String[] rows = matrixData.trim().split("\n");
+        String[] rows = matrixData.trim().split(";");
         int size = rows.length;
         int[][] matrix = new int[size][size];
 
         for (int i = 0; i < size; i++) {
             String[] values = rows[i].trim().split("\\s+");
             for (int j = 0; j < size; j++) {
-                matrix[i][j] = Integer.parseInt(values[j]);
+                matrix[i][j] = Integer.parseInt(values[j].trim());
             }
         }
         return matrix;
     }
+
 }
