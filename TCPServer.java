@@ -34,9 +34,9 @@ public static void main(String[] args) throws IOException {
     // Variables for message passing
     String fromServer; // messages sent to ServerRouter
     String fromClient; // messages received from ServerRouter
-    List<int[][]> matrices = new ArrayList<>();
+    List<long[][]> matrices = new ArrayList<>();
     int numMatrices = 2;
-    int numThreads = 3;
+    int numThreads = 1;
     ExecutorService singleThreadExecutor = Executors.newFixedThreadPool(1);
     ExecutorService multiThreadExecutor = Executors.newFixedThreadPool(numThreads);
     String address = "192.168.1.110"; // destination IP (Client)
@@ -51,17 +51,17 @@ public static void main(String[] args) throws IOException {
     fromClient = in.readLine();
     // Communication while loop
     while (matrices.size() < numMatrices) {
-        int[][] matrix = parseMatrix(fromClient);
+        long[][] matrix = parseMatrix(fromClient);
         matrices.add(matrix);
     }
 
     long singleStartTime = System.currentTimeMillis();
-    int[][] singleThreadResult = multiplyBinaryTree(matrices, singleThreadExecutor);
+    long[][] singleThreadResult = multiplyBinaryTree(matrices, singleThreadExecutor);
     long singleEndTime = System.currentTimeMillis();
     long singleThreadTime = singleEndTime - singleStartTime;
 
     long parallelStartTime = System.currentTimeMillis();
-    int[][] parallelResult = multiplyBinaryTree(matrices, multiThreadExecutor);
+    long[][] parallelResult = multiplyBinaryTree(matrices, multiThreadExecutor);
     long parallelEndTime = System.currentTimeMillis();
     long parallelTime = parallelEndTime - parallelStartTime;
 
@@ -83,14 +83,14 @@ public static void main(String[] args) throws IOException {
     in.close();
     s.close();
 }
-    private static int[][] multiplyBinaryTree (List < int[][]>matrices, ExecutorService executor){
+    private static long[][] multiplyBinaryTree (List <long[][]>matrices, ExecutorService executor){
         while (matrices.size() > 1) {
-            List<Future<int[][]>> results = new ArrayList<>();
-            List<int[][]> nextLevelMatrices = new ArrayList<>();
+            List<Future<long[][]>> results = new ArrayList<>();
+            List<long[][]> nextLevelMatrices = new ArrayList<>();
 
             for (int i = 0; i < matrices.size(); i += 2) {
-                final int[][] A = matrices.get(i);
-                final int[][] B;
+                final long[][] A = matrices.get(i);
+                final long[][] B;
                 if(i+1 < matrices.size()){
                     B = matrices.get(i+1);
                 }
@@ -104,7 +104,7 @@ public static void main(String[] args) throws IOException {
                 }
             }
 
-            for (Future<int[][]> result : results) {
+            for (Future<long[][]> result : results) {
                 try {
                     nextLevelMatrices.add(result.get());
                 } catch (Exception e) {
@@ -117,10 +117,10 @@ public static void main(String[] args) throws IOException {
         return matrices.get(0);
     }
 
-    private static int[][] parseMatrix (String matrixData){
+    private static long[][] parseMatrix (String matrixData){
         String[] rows = matrixData.trim().split(";");
         int size = rows.length;
-        int[][] matrix = new int[size][size];
+        long[][] matrix = new long[size][size];
 
         for (int i = 0; i < size; i++) {
             String[] values = rows[i].trim().split("\\s+");

@@ -3,7 +3,6 @@ package CS4504Project;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.math.BigInteger;
 
 public class TCPClient {
        public static void main(String[] args) throws IOException {
@@ -35,10 +34,10 @@ public class TCPClient {
 
 
       	// Variables for message passing
-         BigInteger[][] matrix = readMatricesFromFile("C:\\Users\\katar\\IntelliJ IDEA Community Edition 2024.2.3\\CS4504Project\\matrix1.txt");
+         long[][] matrix = readMatricesFromFile("C:\\Users\\katar\\IntelliJ IDEA Community Edition 2024.2.3\\CS4504Project\\file.txt");
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
-			String address ="192.168.1.110"; // destination IP (Server)
+			String address ="192.168.1.70"; // destination IP (Server)
 			long t0, t1 = 0, t;
            ArrayList<Long> times = new ArrayList<>();
 
@@ -55,8 +54,8 @@ public class TCPClient {
 
            // Communication of matrix
            StringBuilder matrixString = new StringBuilder();
-           for (BigInteger[] row : matrix) {
-               for (BigInteger value : row) {
+           for (long[] row : matrix) {
+               for (long value : row) {
                    matrixString.append(value).append(" ");
                }
                matrixString.append(";");
@@ -77,13 +76,13 @@ public class TCPClient {
            String[] rows = resultMatrixString.substring(2, resultMatrixString.length() - 2).split("\\], \\[");
            int rowCount = rows.length;
            int colCount = rows[0].split(",").length;
-           int[][] resultMatrix = new int[rowCount][colCount];
+           long[][] resultMatrix = new long[rowCount][colCount];
 
            // Fill result matrix
            for (int i = 0; i < rowCount; i++) {
                String[] values = rows[i].split(",");
                for (int j = 0; j < colCount; j++) {
-                   resultMatrix[i][j] = Integer.parseInt(values[j].trim());
+                   resultMatrix[i][j] = Long.parseLong(values[j].trim());
                }
            }
 
@@ -120,8 +119,8 @@ public class TCPClient {
          s.close();
       }
 
-      public static BigInteger[][] readMatricesFromFile(String fileName){
-          BigInteger[][] matrix = null;
+      public static long[][] readMatricesFromFile(String fileName){
+          long[][] matrix = null;
           try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
               String line;
               while ((line = br.readLine()) != null) {
@@ -130,13 +129,13 @@ public class TCPClient {
                       int rows = Integer.parseInt(dimensions[1]);
                       int cols = Integer.parseInt(dimensions[3]);
 
-                      matrix = new BigInteger[rows][cols];
+                      matrix = new long[rows][cols];
                       for (int i = 0; i < rows; i++) {
                           line = br.readLine();
                           String [] values = line.trim().split("\\s+");
 
                           for (int j = 0; j < cols; j++) {
-                              matrix[i][j] = new BigInteger(values[j]);
+                              matrix[i][j] = Long.parseLong((values[j]));
                           }
                       }
                   }

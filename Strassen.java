@@ -3,22 +3,22 @@ package CS4504Project;
 public class Strassen {
 
     // Method to multiply two matrices using Strassen's algorithm
-    public static int[][] multiply(int[][] A, int[][] B) {
+    public static long[][] multiply(long[][] A, long[][] B) {
         int n = A.length;
-        int[][] R = new int[n][n];
+        long[][] R = new long[n][n];
         /** base case **/
         if (n == 1)
             R[0][0] = A[0][0] * B[0][0];
         else
         {
-            int[][] A11 = new int[n/2][n/2];
-            int[][] A12 = new int[n/2][n/2];
-            int[][] A21 = new int[n/2][n/2];
-            int[][] A22 = new int[n/2][n/2];
-            int[][] B11 = new int[n/2][n/2];
-            int[][] B12 = new int[n/2][n/2];
-            int[][] B21 = new int[n/2][n/2];
-            int[][] B22 = new int[n/2][n/2];
+            long[][] A11 = new long[n/2][n/2];
+            long[][] A12 = new long[n/2][n/2];
+            long[][] A21 = new long[n/2][n/2];
+            long[][] A22 = new long[n/2][n/2];
+            long[][] B11 = new long[n/2][n/2];
+            long[][] B12 = new long[n/2][n/2];
+            long[][] B21 = new long[n/2][n/2];
+            long[][] B22 = new long[n/2][n/2];
 
             /** Dividing matrix A into 4 halves **/
             split(A, A11, 0 , 0);
@@ -41,13 +41,13 @@ public class Strassen {
              M7 = (A12 - A22) (B21 + B22)
              **/
 
-            int [][] M1 = multiply(add(A11, A22), add(B11, B22));
-            int [][] M2 = multiply(add(A21, A22), B11);
-            int [][] M3 = multiply(A11, sub(B12, B22));
-            int [][] M4 = multiply(A22, sub(B21, B11));
-            int [][] M5 = multiply(add(A11, A12), B22);
-            int [][] M6 = multiply(sub(A21, A11), add(B11, B12));
-            int [][] M7 = multiply(sub(A12, A22), add(B21, B22));
+            long [][] M1 = multiply(add(A11, A22), add(B11, B22));
+            long [][] M2 = multiply(add(A21, A22), B11);
+            long [][] M3 = multiply(A11, sub(B12, B22));
+            long [][] M4 = multiply(A22, sub(B21, B11));
+            long [][] M5 = multiply(add(A11, A12), B22);
+            long [][] M6 = multiply(sub(A21, A11), add(B11, B12));
+            long [][] M7 = multiply(sub(A12, A22), add(B21, B22));
 
             /**
              C11 = M1 + M4 - M5 + M7
@@ -55,10 +55,10 @@ public class Strassen {
              C21 = M2 + M4
              C22 = M1 - M2 + M3 + M6
              **/
-            int [][] C11 = add(sub(add(M1, M4), M5), M7);
-            int [][] C12 = add(M3, M5);
-            int [][] C21 = add(M2, M4);
-            int [][] C22 = add(sub(add(M1, M3), M2), M6);
+            long [][] C11 = add(sub(add(M1, M4), M5), M7);
+            long [][] C12 = add(M3, M5);
+            long [][] C21 = add(M2, M4);
+            long [][] C22 = add(sub(add(M1, M3), M2), M6);
 
             /** join 4 halves into one result matrix **/
             join(C11, R, 0 , 0);
@@ -71,9 +71,9 @@ public class Strassen {
     }
 
     /** Function to add two matrices **/
-    private static int[][] add(int[][] A, int[][] B) {
+    private static long[][] add(long[][] A, long[][] B) {
         int n = A.length;
-        int[][] C = new int[n][n];
+        long[][] C = new long[n][n];
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
                 C[i][j] = A[i][j] + B[i][j];
@@ -81,9 +81,9 @@ public class Strassen {
     }
 
     /** Function to sub two matrices **/
-    private static int[][] sub(int[][] A, int[][] B) {
+    private static long[][] sub(long[][] A, long[][] B) {
         int n = A.length;
-        int[][] C = new int[n][n];
+        long[][] C = new long[n][n];
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
                 C[i][j] = A[i][j] - B[i][j];
@@ -91,22 +91,22 @@ public class Strassen {
     }
 
     /** Function to split parent matrix into child matrices **/
-    private static void split(int[][] P, int[][] C, int iB, int jB) {
+    private static void split(long[][] P, long[][] C, int iB, int jB) {
         for(int i1 = 0, i2 = iB; i1 < C.length; i1++, i2++)
             for(int j1 = 0, j2 = jB; j1 < C.length; j1++, j2++)
                 C[i1][j1] = P[i2][j2];
     }
 
     /** Function to join child matrices into parent matrix **/
-    private static void join(int[][] C, int[][] P, int iB, int jB) {
+    private static void join(long[][] C, long[][] P, int iB, int jB) {
         for(int i1 = 0, i2 = iB; i1 < C.length; i1++, i2++)
             for(int j1 = 0, j2 = jB; j1 < C.length; j1++, j2++)
                 P[i2][j2] = C[i1][j1];
     }
 
     //create an integer matrix
-    public static int[][] splitMatrices(String combined, int size, boolean firstHalf) {
-        int[][] matrix = new int[size][size];
+    public static long[][] splitMatrices(String combined, int size, boolean firstHalf) {
+        long[][] matrix = new long[size][size];
         String line;
 
         if (firstHalf) {line = combined.substring(0, combined.length()/2);}
